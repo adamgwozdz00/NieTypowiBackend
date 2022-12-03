@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    platform: linux/x86_64
+    image: postgres:latest
+    restart: always
+    container_name: marklifedb
+    hostname: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=marklife
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/data
+
+  app:
+    image: adamgwozdz00/hackaton-backend
+    restart: always
+    container_name: hackaton_app
+    ports:
+      - "8080:3000"
+    depends_on:
+      - db
+    environment:
+      - SECRET_KEY=KAMILNIEMYJEZEMBOW
+      - EXPIRES_IN=1h
+      - EXPIRES_IN_MS=3600000
+      - TYPE=postgres
+      - HOST=postgres
+      - PORT=5432
+      - USERNAME=postgres
+      - PASSWORD=postgres
+      - DATABASE=marklife
